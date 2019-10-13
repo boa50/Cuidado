@@ -1,44 +1,63 @@
-#include <Wtv020sd16p.h>
+#include "Arduino.h"
+#include "SoftwareSerial.h"
+#include "DFRobotDFPlayerMini.h"
 
-int resetPin = 4;
-int clockPin = 5;
-int dataPin = 6;
-int busyPin = 7;
+SoftwareSerial mySoftwareSerial(5, 6); // RX, TX
+DFRobotDFPlayerMini myDFPlayer;
 
 int sensor1 = 9;
 int sensor2 = 10;
 int sensor3 = 11;
 
-Wtv020sd16p wtv020sd16p(resetPin,clockPin,dataPin,busyPin);
+void setup()
+{
+  mySoftwareSerial.begin(9600);
+  //Inicializa a serial do Arduino
+  Serial.begin(9600);
 
-void setup() {
+  //Verifica se o modulo esta respondendo e se o
+  //cartao SD foi encontrado
+  Serial.println();
+  Serial.println(("DFRobot DFPlayer Mini"));
+  Serial.println(("Inicializando modulo DFPlayer... (3~5 segundos)"));
+  if (!myDFPlayer.begin(mySoftwareSerial))
+  {
+    Serial.println(F("Nao inicializado"));
+    while (true);
+  }
+  
+  Serial.println();
+  Serial.println(F("Modulo DFPlayer Mini inicializado!"));
+  
+  myDFPlayer.volume(17);
+  myDFPlayer.EQ(0);
+  myDFPlayer.play(-47);
+
   pinMode(sensor1, INPUT);
   pinMode(sensor2, INPUT);
   pinMode(sensor3, INPUT);
-  
-  //Initializes the module.
-  wtv020sd16p.reset();
 }
 
-void loop() {
-  
-  wtv020sd16p.setVolume(5);
+void loop()
+{
+//  toca_alarme();
   
   if(digitalRead(sensor1)){
-    wtv020sd16p.asyncPlayVoice(1);
-    delay(4500);
-    wtv020sd16p.stopVoice();
+    Serial.println(1);
+    toca_alarme();
   }
   if(digitalRead(sensor2)){
-    wtv020sd16p.asyncPlayVoice(1);
-    delay(4500);
-    wtv020sd16p.stopVoice();
+    Serial.println(2);
+    toca_alarme();
   }
   if(digitalRead(sensor3)){
-    wtv020sd16p.asyncPlayVoice(1);
-    delay(4500);
-    wtv020sd16p.stopVoice();
+    Serial.println(3);
+    toca_alarme();
   }
+
 }
 
-
+void toca_alarme() {
+  myDFPlayer.start();
+  delay(4500);
+}
