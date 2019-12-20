@@ -13,14 +13,18 @@ void setup()
 {
 
   mySoftwareSerial.begin(9600);
+  Serial.begin(19200);
   delay(5000);
+  
+  Serial.print("inicializa");
   
   if (!myDFPlayer.begin(mySoftwareSerial))
   {
     while (true);
   }
 
-  myDFPlayer.volume(17);
+  Serial.print("inicializado");
+  myDFPlayer.volume(14);
   myDFPlayer.EQ(0);
   myDFPlayer.play(-47);
   
@@ -31,15 +35,18 @@ void setup()
 
 void loop()
 {
-  myDFPlayer.volume(17); 
+  myDFPlayer.volume(14); 
   
   if(digitalRead(sensor1)){
+    Serial.print("sensor1");
     toca_alarme();
   }
   if(digitalRead(sensor2)){
+    Serial.print("sensor2");
     toca_alarme();
   }
   if(digitalRead(sensor3)){
+    Serial.print("sensor3");
     toca_alarme();
   }
 
